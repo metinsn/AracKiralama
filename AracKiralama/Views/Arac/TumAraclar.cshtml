@@ -1,0 +1,132 @@
+﻿@model List<AracKiralama.Models.ViewModels.VMArac>
+@{
+    ViewBag.Title = "Tüm Araçlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Otomobil
+            </div>
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Plako No</th>
+                                <th>Marka</th>
+                                <th>Model</th>
+                                <th>Günlük Ücret</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.PlakaNo</td>
+                                        <td>@item.MarkaIsim</td>
+                                        <td>@item.ModelIsim</td>
+                                        <td>@item.GunlukUcret</td>
+                                        <td>
+                                            <button 
+                                               data-toggle="modal" 
+                                               data-target="#myModal" 
+                                               class="btn btn-warning"
+                                               disabled="@(item.Kiralandimi == true ? true : false)"
+                                               onclick="Atama(@item.AracID,@item.GunlukUcret)">
+                                               Kirala
+                                            </button>
+                                            <a href="#" 
+                                               class="btn btn-info">
+                                               Detay</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">Kiralama</h4>
+                    </div>
+                    <form role="form" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" name="AracID" id="aracId"/>
+                            <input type="hidden" id="gunlukInput" />
+                            <div class="form-group">
+                                <label>İsim</label>
+                                <input class="form-control" name="Isim">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Soyisim</label>
+                                <input class="form-control" name="Soyisim">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Telefon</label>
+                                <input class="form-control" name="Telefon">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Kiralama Tarihi</label>
+                                <input class="form-control" type="date" name="AlisTarihi">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Kiralama Süresi</label>
+                                <input class="form-control"
+                                       type="number" min="1" max="15" name="KiralamaSuresi" onchange="FiyatBelirle()" id="sureInput">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Toplam Ücret</label>
+                                <input class="form-control" type="number" 
+                                       name="AlinanUcret" id="ucretInput">
+                                <input class="form-control" type="hidden"
+                                       name="ToplamUcret" id="toplamUcretInput">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                            <button type="submit" class="btn btn-primary">Tamamla</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    function Atama(val, val2)
+    {
+        document.getElementById("aracId").value = val;
+        document.getElementById("gunlukInput").value = val2;
+    }
+
+    function FiyatBelirle()
+    {
+        var sure = document.getElementById("sureInput").value;
+        var gunlukFiyat = document.getElementById("gunlukInput").value;
+
+        document.getElementById("ucretInput").value = sure * gunlukFiyat;
+        document.getElementById("toplamUcretInput").value = sure * gunlukFiyat;
+    }
+</script>
